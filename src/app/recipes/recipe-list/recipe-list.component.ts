@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import * as firebase from 'firebase';
 
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
@@ -29,7 +30,14 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         }
       );
     this.recipes = this.recipeService.getRecipes();
-    this.Authenticated = this.authService.isAuthenticated();
+    this.Authenticated = false;
+    firebase.auth().onAuthStateChanged( (user) =>{
+      if (user) {
+        this.Authenticated = true;
+      } else {
+        this.Authenticated = false;
+      }
+    });
   }
 
   onNewRecipe() {
@@ -40,6 +48,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
   isAuthenticated(){
-    return this.authService.isAuthenticated();
+    return this.Authenticated;
   }
 }
