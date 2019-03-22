@@ -24,10 +24,36 @@ export class RecipeService {
       [
         new Ingredient('Buns', 2),
         new Ingredient('Meat', 1)
+      ]),
+    new Recipe('Steak',
+      'What else you need to say?',
+      'https://www.bbcgoodfood.com/sites/default/files/guide/hub-image/2014/02/steak-hub.jpg',
+      [
+        new Ingredient('fried chips', 5),
+        new Ingredient('Meat', 1),
+        new Ingredient('salat', 1)
+      ]),
+    new Recipe('Perfect Air Fryer Salmon',
+      'What else you need to say?',
+      'https://noblepig.com/site/wp-content/uploads/2018/02/Perfect-Air-Fryer-Salmon-12.jpg',
+      [
+        new Ingredient('Salmon fish', 1),
+        new Ingredient('salat', 1)
+      ]),
+    new Recipe('Perfect Air Fryer Salmon',
+      'What else you need to say?',
+      'https://scontent-atl3-1.cdninstagram.com/vp/23c3b5c54f45793b7e5c6da7450ab75b/5D1421F3/t51.2885-15/e35/17595989_398317563867026_4326686338150563840_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com',
+      [
+        new Ingredient('c water', 1),
+        new Ingredient('c sugar', 1),
+        new Ingredient('g soft goat cheese', 130),
+        new Ingredient('g kadaif noodles', 200),
+        new Ingredient('tsp rose water', 2),
+        new Ingredient(' g melted butter/ margarine', 75)
       ])
   ];
 
-  constructor(private slService: ShoppingListService) {}
+  constructor(private slService: ShoppingListService) { }
 
   setRecipes(recipes: Recipe[]) {
     this.recipes = recipes;
