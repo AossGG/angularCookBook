@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { DropdownDirective } from './dropdown.directive';
 import {MatButtonModule, MatCheckboxModule,MatInputModule} from '@angular/material';
 import {MatDialogModule} from '@angular/material/dialog'
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { CourseDialogComponent } from '../course-dialog/course-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -18,7 +17,6 @@ import {ReactiveFormsModule} from '@angular/forms';
     CourseDialogComponent
   ],
   imports:[
-    BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
@@ -29,7 +27,6 @@ import {ReactiveFormsModule} from '@angular/forms';
   exports: [
     CommonModule,
     DropdownDirective,
-    BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,

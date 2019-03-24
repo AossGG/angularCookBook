@@ -63,7 +63,6 @@ export class HeaderComponent implements OnInit{
 
   onLogout() {
     this.openDialog();
-    // this.authService.logout();
   }
   openDialog() {
     const dialogConfig = new MatDialogConfig();
@@ -81,7 +80,9 @@ export class HeaderComponent implements OnInit{
     const dialogRef = this.dialog.open(CourseDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-        data => console.log("Dialog output:", data)
+        data =>{ console.log("Dialog output:", data)
+        this.authService.logout();
+      }
     );    
 }
 }
