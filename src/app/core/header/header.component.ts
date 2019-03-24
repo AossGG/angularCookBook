@@ -4,6 +4,8 @@ import * as firebase from 'firebase';
 
 import { DataStorageService } from '../../shared/data-storage.service';
 import { AuthService } from '../../auth/auth.service';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { CourseDialogComponent } from '../../course-dialog/course-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -42,7 +44,8 @@ export class HeaderComponent implements OnInit{
     });  
   }
   constructor(private dataStorageService: DataStorageService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private dialog: MatDialog) {
   }
 
   onSaveData() {
@@ -59,6 +62,26 @@ export class HeaderComponent implements OnInit{
   }
 
   onLogout() {
-    this.authService.logout();
+    this.openDialog();
+    // this.authService.logout();
   }
+  openDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+        id: 1,
+        title: 'Angular For Beginners'
+    };
+
+    this.dialog.open(CourseDialogComponent, dialogConfig);
+    
+    const dialogRef = this.dialog.open(CourseDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+        data => console.log("Dialog output:", data)
+    );    
+}
 }
