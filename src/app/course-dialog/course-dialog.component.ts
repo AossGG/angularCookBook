@@ -13,22 +13,19 @@ export class CourseDialogComponent implements OnInit {
   description:string;
 
   constructor(
-      private fb: FormBuilder,
+    //   private fb: FormBuilder,
       private dialogRef: MatDialogRef<CourseDialogComponent>,
       @Inject(MAT_DIALOG_DATA) data) {
 
-      this.description = data.description;
+      this.description = data.title;
   }
 
   ngOnInit() {
-      this.form = this.fb.group({
-          description: [this.description, []],
-          
-      });
   }
 
   save() {
-      this.dialogRef.close(this.form.value);
+    //   this.dialogRef.close(this.form.value);
+      this.dialogRef.close(1);
   }
 
   close() {

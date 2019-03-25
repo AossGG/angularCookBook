@@ -6,6 +6,7 @@ import * as firebase from 'firebase';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { SaveChangesService } from 'src/app/shared/save-changes.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -19,6 +20,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   constructor(private recipeService: RecipeService,private authService: AuthService,
               private router: Router,
+              private datachanges : SaveChangesService,
               private route: ActivatedRoute) {
   }
 
@@ -41,6 +43,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   onNewRecipe() {
+    this.datachanges.edditMode = true;
     this.router.navigate(['new'], {relativeTo: this.route});
   }
 

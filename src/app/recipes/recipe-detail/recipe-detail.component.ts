@@ -3,6 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
+import { SaveChangesService } from 'src/app/shared/save-changes.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -16,7 +17,8 @@ export class RecipeDetailComponent implements OnInit {
   uid: string;
   constructor(private recipeService: RecipeService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private datachanges : SaveChangesService) {
   }
 
   ngOnInit() {
@@ -53,13 +55,17 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onEditRecipe() {
+    this.datachanges.edditMode = true;
     this.router.navigate(['edit'], {relativeTo: this.route});
     // this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route});
   }
 
   onDeleteRecipe() {
     this.recipeService.deleteRecipe(this.id);
+    this.datachanges.isChanged = true;
+    this.datachanges.isChangesSaved = false; 
     this.router.navigate(['/recipes']);
+    
   }
 
 }

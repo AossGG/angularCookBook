@@ -6,6 +6,7 @@ import { DataStorageService } from '../../shared/data-storage.service';
 import { AuthService } from '../../auth/auth.service';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { CourseDialogComponent } from '../../course-dialog/course-dialog.component';
+import { SaveChangesService } from 'src/app/shared/save-changes.service';
 
 @Component({
   selector: 'app-header',
@@ -45,7 +46,8 @@ export class HeaderComponent implements OnInit{
   }
   constructor(private dataStorageService: DataStorageService,
               private authService: AuthService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private savechanges : SaveChangesService) {
   }
 
   onSaveData() {
@@ -55,6 +57,7 @@ export class HeaderComponent implements OnInit{
           console.log(response);
         }
       );
+      this.savechanges.isChangesSaved = true;
   }
 
   onFetchData() {
@@ -62,9 +65,29 @@ export class HeaderComponent implements OnInit{
   }
 
   onLogout() {
-    this.openDialog();
+    if(this.savechanges.edditMode)
+    {
+      this.openDialog("first finich edit/new recipe").subscribe(
+        data =>console.log("Dialog output:", data)
+        );    
+        return;
+    }
+    if(this.savechanges.isChanged)
+    {
+      this.openDialog("do you want to save changes").subscribe(
+        data =>{
+          if(data == 1){
+            this.onSaveData();
+            }
+            this.authService.logout();
+            this.savechanges.isChanged = false;
+          }
+        );  
+        return;  
+    }
+    this.authService.logout();
   }
-  openDialog() {
+  openDialog(message : string) {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
@@ -72,17 +95,13 @@ export class HeaderComponent implements OnInit{
 
     dialogConfig.data = {
         id: 1,
-        title: 'Angular For Beginners'
+        title: message
     };
 
     this.dialog.open(CourseDialogComponent, dialogConfig);
     
     const dialogRef = this.dialog.open(CourseDialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(
-        data =>{ console.log("Dialog output:", data)
-        this.authService.logout();
-      }
-    );    
-}
+    
+     return dialogRef.afterClosed();
+  }
 }

@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AuthService {
   token: string;
+
   firebaseUser: firebase.User;
     constructor(private router: Router) {
       let config = {

@@ -3,6 +3,9 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import * as firebase from 'firebase';
 import { RecipeService } from '../recipe.service';
+import { SaveChangesService } from 'src/app/shared/save-changes.service';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { CourseDialogComponent } from 'src/app/course-dialog/course-dialog.component';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -17,7 +20,9 @@ export class RecipeEditComponent implements OnInit {
   uid: string;
   constructor(private route: ActivatedRoute,
               private recipeService: RecipeService,
-              private router: Router) {
+              private router: Router,
+              private datachanges : SaveChangesService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -49,8 +54,9 @@ export class RecipeEditComponent implements OnInit {
     } else {
       this.recipeService.addRecipe(this.recipeForm.value);
     }
-    this.onCancel();
-
+    this.datachanges.isChanged = true;
+    this.datachanges.isChangesSaved = false; 
+    this.router.navigate(['../'], {relativeTo: this.route});
   }
 
   onAddIngredient() {
@@ -70,9 +76,31 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onCancel() {
-    this.router.navigate(['../'], {relativeTo: this.route});
+    this.openDialog();
   }
+  openDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+        id: 1,
+        title:  this.editMode?  'edit will be discarded ':'new recipe will be discarded '
+    };
 
+    this.dialog.open(CourseDialogComponent, dialogConfig);
+    
+    const dialogRef = this.dialog.open(CourseDialogComponent, dialogConfig);
+    
+    dialogRef.afterClosed().subscribe(
+        data =>{ 
+        console.log("Dialog output:", data)
+        if(data == 1){
+          this.router.navigate(['../'], {relativeTo: this.route});
+          this.datachanges.edditMode = false;
+        }
+      }
+    );    
+  }
   private initForm() {
     let recipeName = '';
     let recipeImagePath = '';
