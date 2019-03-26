@@ -55,6 +55,7 @@ export class RecipeEditComponent implements OnInit {
       this.recipeService.addRecipe(this.recipeForm.value);
     }
     this.datachanges.isChanged = true;
+    this.datachanges.edditMode = false;
     this.datachanges.isChangesSaved = false; 
     this.router.navigate(['../'], {relativeTo: this.route});
   }

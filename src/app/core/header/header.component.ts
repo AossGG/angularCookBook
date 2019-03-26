@@ -61,15 +61,24 @@ export class HeaderComponent implements OnInit{
   }
 
   onFetchData() {
-    this.dataStorageService.getRecipes();
+    if(this.savechanges.isChanged)
+    {
+      this.openDialog("there are changes made do you want to discarde them").subscribe(
+        data =>{
+          if(data == 1){
+            this.dataStorageService.getRecipes();
+            this.savechanges.isChanged = false;
+            }
+          }
+        );  
+        return;  
+    }
   }
 
   onLogout() {
     if(this.savechanges.edditMode)
     {
-      this.openDialog("first finich edit/new recipe").subscribe(
-        data =>console.log("Dialog output:", data)
-        );    
+      alert("first finich edit/new recipe");    
         return;
     }
     if(this.savechanges.isChanged)
