@@ -5,8 +5,8 @@ import * as firebase from 'firebase';
 
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
-import { AuthService } from 'src/app/auth/auth.service';
 import { SaveChangesService } from 'src/app/shared/save-changes.service';
+import { DataStorageService } from 'src/app/shared/data-storage.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -18,26 +18,35 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   Authenticated: boolean;
 
-  constructor(private recipeService: RecipeService,private authService: AuthService,
+  constructor(private recipeService: RecipeService,
               private router: Router,
               private datachanges : SaveChangesService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private dataStore: DataStorageService) {
   }
 
   ngOnInit() {
-    this.subscription = this.recipeService.recipesChanged
-      .subscribe(
-        (recipes: Recipe[]) => {
-          this.recipes = recipes;
-        }
-      );
-    this.recipes = this.recipeService.getRecipes();
+    // this.recipes = this.recipeService.getRecipes();
     this.Authenticated = false;
     firebase.auth().onAuthStateChanged( (user) =>{
       if (user) {
         this.Authenticated = true;
+        this.dataStore.getRecipes();
+        this.subscription = this.recipeService.UserRecipesChanged
+        .subscribe(
+          (recipes: Recipe[]) => {
+            this.recipes = recipes;
+          }
+        );
       } else {
         this.Authenticated = false;
+        this.dataStore.getPublicRecipes();
+        this.subscription = this.recipeService.recipesChanged
+        .subscribe(
+          (recipes: Recipe[]) => {
+            this.recipes = recipes;
+          }
+        );
       }
     });
   }

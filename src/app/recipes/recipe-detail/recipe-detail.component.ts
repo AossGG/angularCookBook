@@ -24,48 +24,61 @@ export class RecipeDetailComponent implements OnInit {
   ngOnInit() {
     this.loggedIn = false;
     this.uid = "";
+    firebase.auth().onAuthStateChanged( (user) =>{
+      if (user) {
+        console.log("user id logged in");
+        this.loggedIn = true;
+        this.uid = user.uid;
+      } else {
+        this.loggedIn = false;
+        this.uid = "";
+        console.log("user id logged out");
+      }
+    });
     this.route.params
-      .subscribe(
-        (params: Params) => {
-          this.id = +params['id'];
-          let temp = this.recipeService.getRecipe(this.id);
-          if(temp == null)
-          {
-            this.router.navigate(['../'], {relativeTo: this.route});
-          }
-          this.recipe = temp;
+    .subscribe(
+      (params: Params) => {
+        this.id = +params['id'];
+        let temp = this.getrecip(this.id);
+        if(temp == null)
+        {
+          this.router.navigate(['../'], {relativeTo: this.route});
         }
-      );
-      firebase.auth().onAuthStateChanged( (user) =>{
-        if (user) {
-          console.log("user id logged in");
-          this.loggedIn = true;
-          this.uid = user.uid;
-        } else {
-          this.loggedIn = false;
-          this.uid = "";
-          console.log("user id logged out");
+        this.recipe = temp;
+      }
+    );    
 
-        }
-      });
+  }
+  getrecip(id: number): any {
+    if(this.loggedIn)
+       return this.recipeService.UserGetRecipe(this.id);
+    else
+       return this.recipeService.getRecipe(this.id);
   }
 
   onAddToShoppingList() {
-    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
+    if(this.loggedIn ) {
+      this.recipeService.UserAddIngredientsToShoppingList(this.recipe.ingredients);
+    }else{
+      this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
+    }
   }
 
   onEditRecipe() {
-    this.datachanges.edditMode = true;
-    this.router.navigate(['edit'], {relativeTo: this.route});
+    if(this.loggedIn ) {
+      this.datachanges.edditMode = true;
+      this.router.navigate(['edit'], {relativeTo: this.route});
+    }
     // this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route});
   }
 
   onDeleteRecipe() {
-    this.recipeService.deleteRecipe(this.id);
-    this.datachanges.isChanged = true;
-    this.datachanges.isChangesSaved = false; 
-    this.router.navigate(['/recipes']);
-    
+    if(this.loggedIn ) {
+      this.recipeService.UserDeleteRecipe(this.id);
+      this.datachanges.isChanged = true;
+      this.datachanges.isChangesSaved = false; 
+      this.router.navigate(['/recipes']);
+    }
   }
 
 }

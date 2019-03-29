@@ -6,7 +6,7 @@ import { DataStorageService } from '../../shared/data-storage.service';
 import { AuthService } from '../../auth/auth.service';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { CourseDialogComponent } from '../../course-dialog/course-dialog.component';
-import { SaveChangesService } from 'src/app/shared/save-changes.service';
+import { SaveChangesService } from '../../shared/save-changes.service';
 
 @Component({
   selector: 'app-header',

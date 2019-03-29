@@ -22,7 +22,7 @@ export class DataStorageService {
     //   params: new HttpParams().set('auth', token)
     //   // headers: headers
     // });
-    const req = new HttpRequest('PUT', 'https://cook-b1b15.firebaseio.com/users/'+this.authService.firebaseUser.uid+'/recipes.json', this.recipeService.getRecipes(), {reportProgress: true});
+    const req = new HttpRequest('PUT', 'https://cook-b1b15.firebaseio.com/users/'+this.authService.firebaseUser.uid+'/recipes.json', this.recipeService.UserGetRecipes(), {reportProgress: true});
     return this.httpClient.request(req);
   }
 
@@ -45,7 +45,32 @@ export class DataStorageService {
       )
       .subscribe(
         (recipes: Recipe[]) => {
+          this.recipeService.UserSetRecipes(recipes);
+        }
+      );
+  }
+
+  getPublicRecipes() {
+    // this.httpClient.get<Recipe[]>('https://cook-b1b15.firebaseio.com/recipes.json?auth=' + token)
+    this.httpClient.get<Recipe[]>('https://cook-b1b15.firebaseio.com/recipes.json', {
+      observe: 'body',
+      responseType: 'json'
+    })
+      .map(
+        (recipes) => {
+          console.log(recipes);
+          for (let recipe of recipes) {
+            if (!recipe['ingredients']) {
+              recipe['ingredients'] = [];
+            }
+          }
+          return recipes;
+        }
+      )
+      .subscribe(
+        (recipes: Recipe[]) => {
           this.recipeService.setRecipes(recipes);
+          console.log("getPublicRecipes");
         }
       );
   }

@@ -64,6 +64,6 @@ export class AuthService {
   }
 
   isAuthenticated() {
-    return this.token != null;
+    return this.firebaseUser != null;
   }
 }
